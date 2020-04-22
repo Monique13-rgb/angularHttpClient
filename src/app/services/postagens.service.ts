@@ -9,8 +9,14 @@ export class PostagensService {
 
   constructor(private http: HttpClient) { }
 
-salvar(novaPostagem: Postagem){
-  this.http.post('http://localhost:3000/postagens',novaPostagem).subscribe();
+async salvar(novaPostagem: Postagem): Promise<Postagem>{
+  return this.http.post<Postagem>('http://localhost:3000/postagens',novaPostagem).toPromise();
 }
 
+async retornarPostagens(): Promise<Postagem[]> {
+  return this.http.get<Postagem[]>('http://localhost:3000/postagens').toPromise();
+} 
+async retornarPostagem(id: number): Promise<Postagem> {
+  return this.http.get<Postagem>('http://localhost:3000/postagens/' + id).toPromise();
+}
 }
