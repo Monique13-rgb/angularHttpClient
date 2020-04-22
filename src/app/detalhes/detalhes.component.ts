@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
 import { PostagensService } from '../services/postagens.service';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Postagem } from '../models/postagem.model';
 
 @Component({
@@ -11,13 +11,20 @@ import { Postagem } from '../models/postagem.model';
 export class DetalhesComponent implements OnInit {
 
   postagem: Postagem;
-  
-  constructor(private postagensService: PostagensService, private router: Router,private activateRoute: ActivatedRoute) { }
 
-  async ngOnInit(){
-    const idPostagem = this.activateRoute.snapshot.params.id;
+  constructor(
+    private postagensService: PostagensService,
+    private router: Router,
+    private activatedRoute: ActivatedRoute
+  ) { }
+
+  async ngOnInit() {
+    const idPostagem = this.activatedRoute.snapshot.params.id;
     this.postagem = await this.postagensService.retornarPostagem(idPostagem);
-  
   }
-
+async apagar(){
+  await this.postagensService.apagar(this.postagem.id);
+  this.router.navigate(['home']);
+  
+}
 }

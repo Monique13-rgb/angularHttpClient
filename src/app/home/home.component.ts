@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { PostagensService } from '../services/postagens.service';
 import { Postagem } from '../models/postagem.model';
 import { Router } from '@angular/router';
-import { $ } from 'protractor';
 
 @Component({
   selector: 'app-home',
@@ -11,25 +10,34 @@ import { $ } from 'protractor';
 })
 export class HomeComponent implements OnInit {
 
- postagens: Postagem[] = [];
+  postagens: Postagem[] = [];
 
+  constructor(
+    private postagensService: PostagensService,
+    private router: Router
+  ) { }
 
-
-  constructor(private postagensService: PostagensService,private router: Router) { }
-
- async ngOnInit(){
- 
- this.postagens = await this.postagensService.retornarPostagens();
- this.postagens.reverse();
- 
- 
+  async ngOnInit() {
+    this.postagens = await this.postagensService.retornarPostagens();
+    this.postagens.reverse();
   }
 
-novaPostagem(){
-  this.router.navigate[('cadastro')];
+  novaPostagem() {
+    this.router.navigate(['cadastro']);
+  }
+
+  verDetalhes(postagem: Postagem) {
+    this.router.navigate(['postagens', postagem.id]);
+  }
+  editar(postagem:Postagem){
+    this.router.navigate(['postagens', postagem.id,'editar']);
+  }
+  async gostei(postagem: Postagem){
+postagem.likes++;
+await this.postagensService.atualizar(postagem);  
 }
-verDetalhes(postagem: Postagem){
-  this.router.navigate(['postagens',postagem.id]);
-  //this.router.navigateByUrl('postagens/'$(postagem.id));
-}
+async naoGostei(postagem: Postagem){
+  postagem.dislikes++;
+  await this.postagensService.atualizar(postagem);  
+  }
 }
